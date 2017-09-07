@@ -8,13 +8,14 @@
 
 var wrapLog = function (callback, name) {
 
-  return function(a, b, c){
-    if (name === 'area') {
-      var output = name + '(' + a + ', ' + b + ') => ' + callback(a, b, c);
-    } else if (name === 'volume') {
-      var output = name + '(' + a + ', ' + b + ', ' + c + ') => ' + callback(a, b, c);
-    }
+  return function(...args) {
+
+    // using spread and rest parameters from ECMAScript 2015 (6th Edition, ECMA-262)
+    var result = callback(...args);
+    // var result = callback.apply(null, args);
+    var output = name + '(' + args.join(', ') + ') => ' + result;
     console.log(output);
+    return result;
   }
 
 };
@@ -22,6 +23,8 @@ var wrapLog = function (callback, name) {
 var area = function (x, y) {
   return x * y;
 };
+
+// const area = (x, y) => x*y; //Fat arow, could use rest here for variable number of input parameters
 
 var logArea = wrapLog(area, "area");
 
